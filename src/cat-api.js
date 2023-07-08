@@ -74,3 +74,8 @@ function selectCat(event) {
 checklist.addEventListener('change', selectCat);
 checklist.classList.add('hiden');
 errorInfo.classList.add('hiden');
+
+console.log(fetchBreeds);
+console.log(fetchCatByBreed);
+console.log(addList);
+console.log(selectCat);
