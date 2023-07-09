@@ -3,8 +3,12 @@ import SlimSelect from 'slim-select';
 import '../node_modules/slim-select/dist/slimselect.css';
 import Notiflix from 'notiflix';
 
-axios.defaults.headers.common['x-api-key'] =
-  'live_7RIdaPQIKQeuQ4h5OHhIknuCKcTJHhxKZ6jGEa1GCIsFM4TeRDRzpC67rBRSSXOw';
+let axiosCatApi = null;
+
+function start(apiKey) {
+  axiosCatApi = require('axios').default;
+  axiosCatApi.defaults.headers.common['x-api-key'] = apiKey;
+}
 
 const checklist = document.querySelector('.breed-select');
 const catInfo = document.querySelector('.cat-info');
@@ -16,14 +20,14 @@ const apiKey =
   'live_7RIdaPQIKQeuQ4h5OHhIknuCKcTJHhxKZ6jGEa1GCIsFM4TeRDRzpC67rBRSSXOw';
 
 function fetchBreeds() {
-  axios
+  return axiosCatApi
     .get(breeds)
     .then(response => response.data)
     .catch(error => console.error(error.name, error.message));
 }
 
 function fetchCatByBreed(breedId) {
-  axios
+  return axiosCatApi
     .get('${images}${breedId}')
     .then(response => response.data)
     .catch(error => console.error(error.name, error.message));
@@ -51,31 +55,47 @@ function addPost(item) {
 }
 
 function selectCat(event) {
-  loaderInfo.classList.remove('hiden');
-  catInfo.classList.add('hiden');
+  loaderInfo.classList.remove('hidden');
+  catInfo.classList.add('hidden');
   axios
     .fetchCatByBreed(event.currentTarget.value)
     .then(function (response) {
       addPost(response);
-      loaderInfo.classList.add('hiden');
-      catInfo.classList.remove('hiden');
-      errorInfo.classList.add('hiden');
+      loaderInfo.classList.add('hidden');
+      catInfo.classList.remove('hidden');
+      errorInfo.classList.add('hidden');
     })
     .catch(function (error) {
       Notiflix.Notify.failure(
         'Oops! Something went wrong! Try reloading the page!'
       );
-      errorInfo.classList.remove('hiden');
-      loaderInfo.classList.add('hiden');
+      errorInfo.classList.remove('hidden');
+      loaderInfo.classList.add('hidden');
       console.log(error);
     });
 }
 
 checklist.addEventListener('change', selectCat);
-checklist.classList.add('hiden');
-errorInfo.classList.add('hiden');
+checklist.classList.add('hidden');
+errorInfo.classList.add('hidden');
 
-console.log(fetchBreeds);
-console.log(fetchCatByBreed);
-console.log(addList);
-console.log(selectCat);
+start(apiKey);
+fetchBreeds()
+  .then(function (response) {
+    addList(response);
+    loaderInfo.classList.add('hidden');
+    checklist.classList.remove('hidden');
+    errorInfo.classList.add('hidden');
+    var select = new SlimSelect({
+      select: '.breed-select',
+    });
+    Notiflix.Notify.info('Select a breed from the list to get more detailes.');
+  })
+  .catch(function (error) {
+    Notiflix.Notify.failure(
+      'Oops! Something went wrong! Try reloading the page!'
+    );
+    errorInfo.classList.remove('hidden');
+    loaderInfo.classList.add('hidden');
+    console.log(error);
+  });
