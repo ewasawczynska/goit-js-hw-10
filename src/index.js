@@ -43,11 +43,11 @@ function selectCat(event) {
 
 function addPost(item) {
   const markup = `
-  <img src="${item.url}" alt="">
-  <div>
-    <h1>${item.breeds[0].name}</h1>
-    <p>${item.breeds[0].description}</p>
-    <p><span>Temperament: </span>${item.breeds[0].temperament}</p>
+  <center><img class="postImage" src="${item.url}" alt=""></center>
+  <div class="postContent">
+    <h1 class="postTitle">${item.breeds[0].name}</h1>
+    <p class="postText">${item.breeds[0].description}</p>
+    <p><span><b>Temperament: </b></span>${item.breeds[0].temperament}</p>
   </div>
 `;
   catInfo.innerHTML = markup;
