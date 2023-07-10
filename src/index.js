@@ -14,7 +14,7 @@ const api_key =
 function addList(list) {
   const markup = list
     .map(item => {
-      return '<option value=${item.reference_image_id}>${item.name} </option>';
+      return `<option value=${item.reference_image_id}>${item.name} </option>`;
     })
     .join('');
   checklist.innerHTML = markup;
@@ -33,7 +33,7 @@ function selectCat(event) {
     })
     .catch(function (error) {
       Notiflix.Notify.failure(
-        'Oops! Something went wrong! Try reloading the page!'
+        'Upps! Coś poszło nie tak. Odśwież stronę jeszcze raz.'
       );
       errorInfo.classList.remove('hidden');
       loaderInfo.classList.add('hidden');
@@ -43,13 +43,13 @@ function selectCat(event) {
 
 function addPost(item) {
   const markup = `
-      <img src="${item.url}" alt="">
-      <div>
-        <h1>${item.breeds[0].name}</h1>
-        <p>${item.breeds[0].description}</p>
-        <p><span>Temperament: </span>${item.breeds[0].temperament}</p>
-      </div>
-    `;
+  <img src="${item.url}" alt="">
+  <div>
+    <h1>${item.breeds[0].name}</h1>
+    <p>${item.breeds[0].description}</p>
+    <p><span>Temperament: </span>${item.breeds[0].temperament}</p>
+  </div>
+`;
   catInfo.innerHTML = markup;
 }
 
@@ -57,7 +57,7 @@ checklist.addEventListener('change', selectCat);
 checklist.classList.add('hidden');
 errorInfo.classList.add('hidden');
 
-catApi.start(api_key);
+catApi.init(api_key);
 catApi
   .fetchBreeds()
   .then(function (response) {
@@ -66,9 +66,8 @@ catApi
     checklist.classList.remove('hidden');
     errorInfo.classList.add('hidden');
     var select = new SlimSelect({
-      select: '.breed-select',
+      select: checklist,
     });
-    Notiflix.Notify.info('Select a breed from the list to get more detailes.');
   })
   .catch(function (error) {
     Notiflix.Notify.failure(

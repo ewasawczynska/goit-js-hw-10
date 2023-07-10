@@ -3,14 +3,13 @@ export default axios;
 
 let axiosCatApi = null;
 
-const breeds = 'https://api.thecatapi.com/v1/breeds';
-const images = 'https://api.thecatapi.com/v1/images';
+const breeds = `https://api.thecatapi.com/v1/breeds`;
+const images = `https://api.thecatapi.com/v1/images/`;
 
-export function start(api_key) {
+export function init(api_key) {
   axiosCatApi = require('axios').default;
   axiosCatApi.defaults.headers.common['x-api-key'] = api_key;
 }
-
 export function fetchBreeds() {
   return axiosCatApi
     .get(breeds)
@@ -20,10 +19,9 @@ export function fetchBreeds() {
       throw error;
     });
 }
-
 export function fetchCatByBreed(breedId) {
   return axiosCatApi
-    .get('${images}${breedId}')
+    .get(`${images}${breedId}`)
     .then(response => response.data)
     .catch(error => {
       console.error(error.name, error.message);
